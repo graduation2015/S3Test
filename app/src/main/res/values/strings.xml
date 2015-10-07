@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">S3Test</string>
-    <string name="toolbar_title">Title</string>
+    <string name="toolbar_title">@string/app_name</string>
+    <string name="hello_world">Hello world!</string>
+    <string-array name="planets_array">
+        <item>Menu01</item>
+        <item>Menu02</item>
+    </string-array>
 </resources>
