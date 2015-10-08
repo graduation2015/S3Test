@@ -17,20 +17,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        findViews();
         setUpDrawerList();
     }
 
-    private void setUpDrawerList() {
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
+    private void findViews() {
         mPlanetTitles = getResources().getStringArray(R.array.planets_array);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.list_view);
 
+    }
+
+    private void setUpDrawerList() {
         // Set the adapter for the list view
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, mPlanetTitles));
         // Set the list's click listener
-//        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
     }
 
 }
