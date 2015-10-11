@@ -2,28 +2,36 @@ package jp.ac.it_college.std.s3test;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSSessionCredentials;
-import com.amazonaws.auth.CognitoCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.BasicSessionCredentials;
+import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 
 public class AWSClientManager {
 
-    public AmazonS3Client makeS3Client() {
-        AWSCredentials credentials = makeCredentials();
+    private AWSCredentials mCredentials;
+    private AmazonS3Client s3Client;
 
-        AmazonS3Client client = new AmazonS3Client(credentials);
-        client.setEndpoint(Constants.END_POINT);
-        return client;
+    public AWSClientManager() {
+        this.mCredentials = new BasicAWSCredentials(Constants.ACCESS_KEY, Constants.SECRET_KEY);
+        makeS3Client();
     }
 
-    public AWSSessionCredentials makeCredentials() {
-        CognitoCredentialsProvider cognitoProvider = new CognitoCredentialsProvider(
-                Constants.ACCOUNT_ID,
-                Constants.IDENTITY_POOL_ID,
-                Constants.UNAUTH_ROLE_NAME,
-                Constants.AUTH_ROLE_NAME,
-                Regions.AP_NORTHEAST_1);
+    public AWSClientManager(AWSCredentials credentials) {
+        this.mCredentials = credentials;
+    }
 
-        return cognitoProvider.getCredentials();
+    private void makeS3Client() {
+        s3Client = new AmazonS3Client(mCredentials);
+        s3Client.setRegion(Region.getRegion(Regions.AP_NORTHEAST_1));
+    }
+
+    public AmazonS3Client getS3Client() {
+        return s3Client;
+    }
+
+    public AWSCredentials getCredentials() {
+        return mCredentials;
     }
 }

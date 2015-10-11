@@ -1,6 +1,8 @@
 package jp.ac.it_college.std.s3test;
 
 import android.app.Fragment;
+import android.app.LoaderManager;
+import android.content.Loader;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -13,7 +15,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-public class MainActivity extends AppCompatActivity {
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSSessionCredentials;
+
+public class MainActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<AWSCredentials> {
 
     private String[] mPlanetTitles;
     private ListView mDrawerList;
@@ -22,15 +28,18 @@ public class MainActivity extends AppCompatActivity {
     private CharSequence mTitle;
     private ActionBarDrawerToggle mDrawerToggle;
     private Toolbar mToolbar;
+    private AWSClientManager mClientManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initFragment(savedInstanceState);
         findViews();
         setUpDrawerList();
         setUpToolbar();
+        initAWSClient();
     }
 
     @Override
@@ -92,17 +101,53 @@ public class MainActivity extends AppCompatActivity {
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
     }
 
+    private void initAWSClient() {
+        mClientManager = new AWSClientManager();
+//        getLoaderManager().initLoader(0, null, this);
+    }
+
+    private void initFragment(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.container_content, new MainFragment())
+                    .commit();
+        }
+    }
+
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
         getSupportActionBar().setTitle(mTitle);
     }
 
+    public AWSClientManager getClientManager() {
+        return mClientManager;
+    }
+
+    /* Implemented LoaderManager.LoaderCallbacks */
+    @Override
+    public Loader<AWSCredentials> onCreateLoader(int i, Bundle bundle) {
+        return new CognitoAsyncTaskLoader(this);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<AWSCredentials> loader, AWSCredentials awsCredentials) {
+        mClientManager = new AWSClientManager(awsCredentials);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<AWSCredentials> loader) {
+
+    }
+
+
+
     private class DrawerItemClickListener implements android.widget.AdapterView.OnItemClickListener {
 
-        public static final int FRAGMENT_S3_UPLOAD = 0;
-        public static final int FRAGMENT_S3_DOWNLOAD = 1;
-        public static final int FRAGMENT_S3_LIST = 2;
+        public static final int FRAGMENT_MAIN = 0;
+        public static final int FRAGMENT_S3_UPLOAD = 1;
+        public static final int FRAGMENT_S3_DOWNLOAD = 2;
+        public static final int FRAGMENT_S3_LIST = 3;
 
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -122,6 +167,8 @@ public class MainActivity extends AppCompatActivity {
 
         private Fragment getFragment(int position) {
             switch (position) {
+                case FRAGMENT_MAIN:
+                    return new MainFragment();
                 case FRAGMENT_S3_UPLOAD:
                     return new S3UploadFragment();
                 case FRAGMENT_S3_DOWNLOAD:
@@ -129,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                 case FRAGMENT_S3_LIST:
                     return new S3ListFragment();
                 default:
-                    return new S3UploadFragment();
+                    return new MainFragment();
             }
         }
     }
