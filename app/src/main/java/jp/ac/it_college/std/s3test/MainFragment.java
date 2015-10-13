@@ -34,13 +34,13 @@ public class MainFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_cognito_sync:
-                cognitoSync();
+                showCredentials();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void cognitoSync() {
+    private void showCredentials() {
         AWSCredentials session = ((MainActivity) getActivity()).getClientManager().getCredentials();
         Log.d("Credentials", "AccessKey = " + session.getAWSAccessKeyId());
         Log.d("Credentials", "SecretKey = " + session.getAWSSecretKey());

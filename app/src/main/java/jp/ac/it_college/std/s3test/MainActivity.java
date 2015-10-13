@@ -5,6 +5,7 @@ import android.app.LoaderManager;
 import android.content.Loader;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +17,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSSessionCredentials;
 
 public class MainActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<AWSCredentials> {
@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity
     private ActionBarDrawerToggle mDrawerToggle;
     private Toolbar mToolbar;
     private AWSClientManager mClientManager;
+    private ProgressDialogFragment mDialogFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,8 +104,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initAWSClient() {
-        mClientManager = new AWSClientManager();
-//        getLoaderManager().initLoader(0, null, this);
+//        mClientManager = new AWSClientManager();
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     private void initFragment(Bundle savedInstanceState) {
@@ -112,6 +114,8 @@ public class MainActivity extends AppCompatActivity
                     .replace(R.id.container_content, new MainFragment())
                     .commit();
         }
+
+        mDialogFragment = new ProgressDialogFragment().newInstance("Credentials", "Getting credentials");
     }
 
     @Override
@@ -127,11 +131,19 @@ public class MainActivity extends AppCompatActivity
     /* Implemented LoaderManager.LoaderCallbacks */
     @Override
     public Loader<AWSCredentials> onCreateLoader(int i, Bundle bundle) {
+        mDialogFragment.show(getFragmentManager(), "Credentials");
         return new CognitoAsyncTaskLoader(this);
     }
 
     @Override
     public void onLoadFinished(Loader<AWSCredentials> loader, AWSCredentials awsCredentials) {
+        new Handler(getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                mDialogFragment.dismiss();
+            }
+        });
+
         mClientManager = new AWSClientManager(awsCredentials);
     }
 

@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "jp.ac.it_college.std.s3test"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"

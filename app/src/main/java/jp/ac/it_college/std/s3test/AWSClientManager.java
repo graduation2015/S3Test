@@ -15,20 +15,24 @@ public class AWSClientManager {
 
     public AWSClientManager() {
         this.mCredentials = new BasicAWSCredentials(Constants.ACCESS_KEY, Constants.SECRET_KEY);
-        makeS3Client();
     }
 
     public AWSClientManager(AWSCredentials credentials) {
         this.mCredentials = credentials;
     }
 
-    private void makeS3Client() {
+    private AmazonS3Client makeS3Client() {
         s3Client = new AmazonS3Client(mCredentials);
         s3Client.setRegion(Region.getRegion(Regions.AP_NORTHEAST_1));
+        return s3Client;
     }
 
     public AmazonS3Client getS3Client() {
-        return s3Client;
+        if (s3Client == null) {
+            return makeS3Client();
+        } else {
+            return s3Client;
+        }
     }
 
     public AWSCredentials getCredentials() {
