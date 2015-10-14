@@ -12,6 +12,7 @@
     <string name="progress_dialog_title">Getting files</string>
     <string name="progress_dialog_message">Getting file infomations.</string>
     <string name="lbl_select_image">Selected image:</string>
+    <string name="menu_s3_upload_select_image">Select image</string>
     <string-array name="planets_array">
         <item>Main</item>
         <item>S3 Upload</item>

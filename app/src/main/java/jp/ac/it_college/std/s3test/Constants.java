@@ -6,7 +6,7 @@ public class Constants {
     public static final String IDENTITY_POOL_ID = "";
     public static final String ACCESS_KEY = "";
     public static final String SECRET_KEY = "";
-    public static final String BUCKET_NAME = "";
+    public static final String BUCKET_NAME = "ikemen";
 
     public static final String DIALOG_FRAGMENT_TITLE = "title";
     public static final String DIALOG_FRAGMENT_MESSAGE = "message";

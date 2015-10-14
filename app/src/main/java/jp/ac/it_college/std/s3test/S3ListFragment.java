@@ -13,6 +13,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectListing;
@@ -41,7 +43,7 @@ public class S3ListFragment extends ListFragment implements LoaderManager.Loader
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.s3_list_menu, menu);
+        inflater.inflate(R.menu.menu_s3_list, menu);
     }
 
     @Override
@@ -57,6 +59,13 @@ public class S3ListFragment extends ListFragment implements LoaderManager.Loader
     private void reload() {
         getLoaderManager().restartLoader(0, null, this);
    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+        S3ObjectSummary summary = (S3ObjectSummary) getListAdapter().getItem(position);
+        Toast.makeText(getActivity(), summary.getOwner().getDisplayName(), Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public Loader<ObjectListing> onCreateLoader(int i, Bundle bundle) {
