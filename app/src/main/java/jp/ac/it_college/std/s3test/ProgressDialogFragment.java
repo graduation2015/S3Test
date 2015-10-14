@@ -2,6 +2,7 @@ package jp.ac.it_college.std.s3test;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 
@@ -38,4 +39,5 @@ public class ProgressDialogFragment extends DialogFragment {
         setCancelable(false);
         return progressDialog;
     }
+
 }
