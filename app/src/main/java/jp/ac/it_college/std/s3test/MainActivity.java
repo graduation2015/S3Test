@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 
 public class MainActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<AWSCredentials> {
@@ -30,7 +31,6 @@ public class MainActivity extends AppCompatActivity
     private Toolbar mToolbar;
     private AWSClientManager mClientManager;
     private ProgressDialogFragment mDialogFragment;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        mClientManager = new AWSClientManager(awsCredentials);
+        mClientManager = new AWSClientManager(awsCredentials, this);
     }
 
     @Override

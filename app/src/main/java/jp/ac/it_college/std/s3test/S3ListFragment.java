@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
@@ -65,6 +67,13 @@ public class S3ListFragment extends ListFragment implements LoaderManager.Loader
         super.onListItemClick(l, v, position, id);
         S3ObjectSummary summary = (S3ObjectSummary) getListAdapter().getItem(position);
         Toast.makeText(getActivity(), summary.getOwner().getDisplayName(), Toast.LENGTH_SHORT).show();
+//        TransferUtility utility = ((MainActivity) getActivity()).getClientManager().getTransferUtility();
+//
+//        TransferObserver observer = utility.download(
+//                Constants.BUCKET_NAME,     /* The bucket to download from */
+//                summary.getKey(),    /* The key for the object to download */
+//                MY_FILE        /* The file to download the object to */
+//        );
     }
 
     @Override
