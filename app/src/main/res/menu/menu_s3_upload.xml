@@ -4,4 +4,8 @@
         android:id="@+id/menu_s3_upload_select_image"
         android:title="@string/menu_s3_upload_select_image" />
 
+    <item
+        android:id="@+id/menu_s3_upload"
+        android:title="@string/menu_s3_upload" />
+
 </menu>
