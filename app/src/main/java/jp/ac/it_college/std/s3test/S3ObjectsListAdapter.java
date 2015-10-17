@@ -44,7 +44,9 @@ public class S3ObjectsListAdapter extends ArrayAdapter<S3ObjectSummary> {
             }
 
             if (size != null) {
-                size.setText(String.valueOf(mContext.getString(R.string.lbl_size) + summary.getSize()));
+                String sizeLine = String.format("%s: %d %s",
+                        mContext.getString(R.string.lbl_size), summary.getSize(), mContext.getString(R.string.lbl_byte));
+                size.setText(sizeLine);
             }
         }
         return view;

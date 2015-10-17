@@ -6,11 +6,11 @@ import android.content.Context;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectListing;
 
-public class S3GetBucketListAsyncTaskLoader extends AsyncTaskLoader<ObjectListing> {
+public class S3GetObjectListAsyncTaskLoader extends AsyncTaskLoader<ObjectListing> {
     private Context mContext;
     private AmazonS3Client mS3Client;
 
-    public S3GetBucketListAsyncTaskLoader(Context context, AmazonS3Client s3Client) {
+    public S3GetObjectListAsyncTaskLoader(Context context, AmazonS3Client s3Client) {
         super(context);
         this.mS3Client = s3Client;
     }

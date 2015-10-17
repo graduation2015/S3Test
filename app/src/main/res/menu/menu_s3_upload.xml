@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/menu_s3_upload_select_image"
-        android:title="@string/menu_s3_upload_select_image" />
+        android:id="@+id/menu_s3_upload_select_file"
+        android:title="@string/menu_s3_upload_select_file" />
 
     <item
-        android:id="@+id/menu_s3_upload"
-        android:title="@string/menu_s3_upload" />
+        android:id="@+id/menu_s3_begin_upload"
+        android:title="@string/menu_s3_begin_upload" />
 
 </menu>

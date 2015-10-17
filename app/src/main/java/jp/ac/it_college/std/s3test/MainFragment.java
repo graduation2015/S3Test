@@ -3,25 +3,33 @@ package jp.ac.it_college.std.s3test;
 
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.amazonaws.auth.AWSCredentials;
 
 
 public class MainFragment extends Fragment {
+    private TextView mLabelAccessKey;
+    private TextView mLabelSecretKey;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_main, container, false);
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        findViews(view);
+        return view;
+    }
+
+    private void findViews(View view) {
+        mLabelAccessKey = (TextView) view.findViewById(R.id.lbl_access_key);
+        mLabelSecretKey = (TextView) view.findViewById(R.id.lbl_secret_key);
     }
 
     @Override
@@ -33,7 +41,7 @@ public class MainFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_cognito_sync:
+            case R.id.showCredentials:
                 showCredentials();
                 break;
         }
@@ -41,8 +49,8 @@ public class MainFragment extends Fragment {
     }
 
     private void showCredentials() {
-        AWSCredentials session = ((MainActivity) getActivity()).getClientManager().getCredentials();
-        Log.d("Credentials", "AccessKey = " + session.getAWSAccessKeyId());
-        Log.d("Credentials", "SecretKey = " + session.getAWSSecretKey());
+        AWSCredentials credentials = ((MainActivity) getActivity()).getClientManager().getCredentials();
+        mLabelAccessKey.setText(String.format("%s\n%s", getString(R.string.lbl_access_key), credentials.getAWSAccessKeyId()));
+        mLabelSecretKey.setText(String.format("%s\n%s", getString(R.string.lbl_secret_key), credentials.getAWSSecretKey()));
     }
 }

@@ -14,10 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
@@ -39,6 +36,10 @@ public class S3ListFragment extends ListFragment implements LoaderManager.Loader
         setListAdapter(new S3ObjectsListAdapter(getActivity(), R.layout.row_s3_objects, mObjectSummaries));
         dialogFragment = ProgressDialogFragment.newInstance(
                 getString(R.string.progress_dialog_title), getString(R.string.progress_dialog_message));
+
+        // オブジェクトリスト更新
+        reloadList();
+
         return inflater.inflate(R.layout.fragment_s3_list, container, false);
     }
 
@@ -52,13 +53,13 @@ public class S3ListFragment extends ListFragment implements LoaderManager.Loader
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_s3_list_reload:
-                reload();
+                reloadList();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void reload() {
+    private void reloadList() {
         getLoaderManager().restartLoader(0, null, this);
    }
 
@@ -66,7 +67,6 @@ public class S3ListFragment extends ListFragment implements LoaderManager.Loader
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         S3ObjectSummary summary = (S3ObjectSummary) getListAdapter().getItem(position);
-        Toast.makeText(getActivity(), summary.getOwner().getDisplayName(), Toast.LENGTH_SHORT).show();
 //        TransferUtility utility = ((MainActivity) getActivity()).getClientManager().getTransferUtility();
 //
 //        TransferObserver observer = utility.download(
@@ -78,10 +78,10 @@ public class S3ListFragment extends ListFragment implements LoaderManager.Loader
 
     @Override
     public Loader<ObjectListing> onCreateLoader(int i, Bundle bundle) {
-        dialogFragment.show(getFragmentManager(), Constants.TAG_PROGRESS);
+        dialogFragment.show(getFragmentManager(), "Progress");
 
         AmazonS3Client client = ((MainActivity) getActivity()).getClientManager().getS3Client();
-        return new S3GetBucketListAsyncTaskLoader(getActivity(), client);
+        return new S3GetObjectListAsyncTaskLoader(getActivity(), client);
     }
 
     @Override

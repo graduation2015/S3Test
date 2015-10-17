@@ -17,16 +17,9 @@ public class AWSClientManager {
     private AWSCredentials mCredentials;
     private AmazonS3Client s3Client;
     private TransferUtility transferUtility;
-    private Context context;
 
-
-    public AWSClientManager() {
-        this.mCredentials = new BasicAWSCredentials(Constants.ACCESS_KEY, Constants.SECRET_KEY);
-    }
-
-    public AWSClientManager(AWSCredentials credentials, Context context) {
+    public AWSClientManager(AWSCredentials credentials) {
         this.mCredentials = credentials;
-        this.context = context;
     }
 
     private AmazonS3Client makeS3Client() {
@@ -37,10 +30,10 @@ public class AWSClientManager {
 
     public AmazonS3Client getS3Client() {
         if (s3Client == null) {
-            return makeS3Client();
-        } else {
-            return s3Client;
+            s3Client = makeS3Client();
         }
+
+        return s3Client;
     }
 
     private TransferUtility makeTransferUtility(Context context) {
@@ -49,12 +42,12 @@ public class AWSClientManager {
         return  transferUtility;
     }
 
-    public TransferUtility getTransferUtility() {
+    public TransferUtility getTransferUtility(Context context) {
         if (transferUtility == null) {
-            return makeTransferUtility(context);
-        } else {
-            return transferUtility;
+            transferUtility = makeTransferUtility(context);
         }
+
+        return transferUtility;
     }
 
     public AWSCredentials getCredentials() {

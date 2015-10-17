@@ -9,13 +9,15 @@ import android.os.Bundle;
 public class ProgressDialogFragment extends DialogFragment {
 
     private ProgressDialog progressDialog;
+    public static final String DIALOG_FRAGMENT_TITLE = "title";
+    public static final String DIALOG_FRAGMENT_MESSAGE = "message";
 
     public static ProgressDialogFragment newInstance(String title, String message) {
         ProgressDialogFragment fragment = new ProgressDialogFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putString(Constants.DIALOG_FRAGMENT_TITLE, title);
-        bundle.putString(Constants.DIALOG_FRAGMENT_MESSAGE, message);
+        bundle.putString(DIALOG_FRAGMENT_TITLE, title);
+        bundle.putString(DIALOG_FRAGMENT_MESSAGE, message);
 
         fragment.setArguments(bundle);
 
@@ -28,8 +30,8 @@ public class ProgressDialogFragment extends DialogFragment {
             return progressDialog;
         }
 
-        String title = getArguments().getString(Constants.DIALOG_FRAGMENT_TITLE);
-        String message = getArguments().getString(Constants.DIALOG_FRAGMENT_MESSAGE);
+        String title = getArguments().getString(DIALOG_FRAGMENT_TITLE);
+        String message = getArguments().getString(DIALOG_FRAGMENT_MESSAGE);
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setTitle(title);
