@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +37,14 @@ public class S3DownloadsListAdapter extends ArrayAdapter<Bitmap> {
 
         if (bitmap != null) {
             ImageView imageView = (ImageView) view.findViewById(R.id.image_view_downloads);
+            TextView fileName = (TextView) view.findViewById(R.id.lbl_file_name);
 
             if (imageView != null) {
                 imageView.setImageBitmap(bitmap);
+            }
+
+            if (fileName != null) {
+                fileName.setText(bitmap.getConfig().name());
             }
         }
 

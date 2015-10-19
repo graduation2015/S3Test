@@ -31,6 +31,8 @@ public class S3DownloadFragment extends ListFragment {
     }
 
     private void setDownLoads() {
+        items.clear();
+
         for (String name : list) {
             Bitmap bitmap = BitmapFactory.decodeFile(DIRECTORY_PATH + name);
             items.add(bitmap);
