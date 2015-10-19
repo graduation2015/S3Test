@@ -4,8 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/image_view_downloads"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="300dp" />
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/image_view_downloads"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="0.5"
+            />
+
+        <TextView
+            android:id="@+id/lbl_file_name"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="0.5"
+            />
+
+    </LinearLayout>
 </LinearLayout>
