@@ -17,6 +17,7 @@
     <string name="lbl_access_key">"AccessKey: "</string>
     <string name="lbl_secret_key">"SecretKey: "</string>
     <string name="lbl_byte">bytes</string>
+    <string name="lbl_s3_download_empty">No files.</string>
     <string-array name="planets_array">
         <item>Main</item>
         <item>S3 Upload</item>
