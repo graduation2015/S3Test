@@ -24,4 +24,9 @@
         <item>S3 List</item>
     </string-array>
 
+    <string-array name="mode_array">
+        <item>DownLoad</item>
+        <item>Delete</item>
+    </string-array>
+
 </resources>

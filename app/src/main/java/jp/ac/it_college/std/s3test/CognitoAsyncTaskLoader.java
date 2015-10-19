@@ -5,7 +5,6 @@ import android.content.Context;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.amazonaws.auth.CognitoCredentialsProvider;
 import com.amazonaws.regions.Regions;
 
 public class CognitoAsyncTaskLoader extends AsyncTaskLoader<AWSCredentials>{

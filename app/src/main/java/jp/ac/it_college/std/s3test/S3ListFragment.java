@@ -1,12 +1,16 @@
 package jp.ac.it_college.std.s3test;
 
 
+import android.app.AlertDialog;
 import android.app.ListFragment;
 import android.app.LoaderManager;
+import android.content.DialogInterface;
 import android.content.Loader;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,11 +18,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +37,11 @@ public class S3ListFragment extends ListFragment implements LoaderManager.Loader
 
     private List<S3ObjectSummary> mObjectSummaries = new ArrayList<>();
     private ProgressDialogFragment dialogFragment;
+
+    private static final int ITEM_DOWNLOAD = 0;
+    private static final int ITEM_DELETE = 1;
+    private static final String DIRECTORY_NAME = "/SampleDirectory/";
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,13 +82,57 @@ public class S3ListFragment extends ListFragment implements LoaderManager.Loader
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         S3ObjectSummary summary = (S3ObjectSummary) getListAdapter().getItem(position);
-//        TransferUtility utility = ((MainActivity) getActivity()).getClientManager().getTransferUtility();
-//
-//        TransferObserver observer = utility.download(
-//                Constants.BUCKET_NAME,     /* The bucket to download from */
-//                summary.getKey(),    /* The key for the object to download */
-//                MY_FILE        /* The file to download the object to */
-//        );
+        showAlertDialog(summary);
+    }
+
+    private void showAlertDialog(final S3ObjectSummary summary) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(summary.getKey())
+                .setItems(getResources().getStringArray(R.array.mode_array),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                selectItem(summary, i);
+                            }
+                        })
+                .show();
+    }
+
+    private void selectItem(S3ObjectSummary summary, int position) {
+        switch (position) {
+            case ITEM_DOWNLOAD:
+                beginDownload(summary);
+                break;
+            case ITEM_DELETE:
+                break;
+        }
+    }
+
+    private String makeDirectory(String path) {
+        File directory = new File(path);
+        if (!directory.exists()) {
+            if (!directory.mkdir()) {
+                Toast.makeText(getActivity(), "ディレクトリの作成に失敗", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+        }
+        return directory.getAbsolutePath();
+    }
+
+    private void beginDownload(S3ObjectSummary summary) {
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + DIRECTORY_NAME;
+        File file = new File(makeDirectory(path), summary.getKey());
+
+        TransferUtility utility = ((MainActivity) getActivity())
+                .getClientManager().getTransferUtility(getActivity());
+
+        TransferObserver observer = utility.download(
+                Constants.BUCKET_NAME,
+                summary.getKey(),
+                file);
+
+        observer.setTransferListener(new S3DownloadListener());
+
     }
 
     @Override
@@ -101,5 +160,47 @@ public class S3ListFragment extends ListFragment implements LoaderManager.Loader
     @Override
     public void onLoaderReset(Loader<ObjectListing> loader) {
 
+    }
+
+    private class S3DownloadListener implements TransferListener {
+        private ProgressDialogFragment mDialogFragment;
+        private static final String DIALOG_TITLE = "Download";
+        private static final String DIALOG_MESSAGE = "Downloading...";
+        private static final String TAG = "S3DownloadListener";
+
+
+        public S3DownloadListener() {
+            mDialogFragment = ProgressDialogFragment
+                    .newInstance(DIALOG_TITLE, DIALOG_MESSAGE);
+        }
+
+        @Override
+        public void onStateChanged(int i, TransferState transferState) {
+            switch (transferState) {
+                case IN_PROGRESS:
+                    mDialogFragment.show(getFragmentManager(), "tag_downloading");
+                    break;
+                case COMPLETED:
+                    mDialogFragment.dismiss();
+                    Toast.makeText(getActivity(), "Download completed.", Toast.LENGTH_SHORT).show();
+                    break;
+                case FAILED:
+                    mDialogFragment.dismiss();
+                    Toast.makeText(getActivity(), "Download failed.", Toast.LENGTH_SHORT).show();
+                default:
+                    Log.d(TAG, transferState.name());
+                    break;
+            }
+        }
+
+        @Override
+        public void onProgressChanged(int i, long l, long l1) {
+
+        }
+
+        @Override
+        public void onError(int i, Exception e) {
+
+        }
     }
 }
